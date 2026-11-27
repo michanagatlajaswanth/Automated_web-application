@@ -1,0 +1,284 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureScan | Web Vulnerability Scanner</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">S</div>
+            <div>
+                <h2>SecureScan</h2>
+                <span>Vulnerability Scanner</span>
+            </div>
+        </div>
+
+        <nav>
+            <a class="active" href="#dashboard">▦ Dashboard</a>
+            <a href="#new-scan">⌕ New Scan</a>
+            <a href="#findings">⚠ Vulnerabilities</a>
+            <a href="#history">◷ Scan History</a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <span class="status-dot"></span>
+            Scanner Environment
+            <small>Local instance</small>
+        </div>
+    </aside>
+
+
+    <!-- Main Dashboard -->
+    <main class="main-content" id="dashboard">
+
+        <!-- Header -->
+        <header class="topbar">
+            <div>
+                <h1>Security Dashboard</h1>
+                <p>Monitor and analyze your web application security.</p>
+            </div>
+
+            <div class="system-status">
+                <span class="status-dot"></span>
+                Scanner Dashboard
+            </div>
+        </header>
+
+
+        <!-- Welcome Section -->
+        <section class="welcome">
+            <div>
+                <span class="eyebrow">WEB APPLICATION SECURITY</span>
+                <h2>Protect your applications.</h2>
+                <p>
+                    Discover vulnerabilities with automated security
+                    scanning powered by OWASP ZAP.
+                </p>
+            </div>
+
+            <div class="shield">🛡️</div>
+        </section>
+
+
+        <!-- Dashboard Statistics -->
+        <section class="stats">
+
+            <article class="stat-card">
+                <span>Total Scans</span>
+                <strong id="totalScans">0</strong>
+                <small>Scans initiated</small>
+            </article>
+
+            <article class="stat-card">
+                <span>Total Findings</span>
+                <strong id="totalFindings">0</strong>
+                <small>Detected issues</small>
+            </article>
+
+            <article class="stat-card">
+                <span>High Risk</span>
+                <strong id="highRisk">0</strong>
+                <small>High-risk findings</small>
+            </article>
+
+            <article class="stat-card">
+                <span>Completed Scans</span>
+                <strong id="completedScans">0</strong>
+                <small>Successfully completed</small>
+            </article>
+
+        </section>
+
+
+        <!-- Risk Distribution -->
+        <section class="panel risk-panel">
+
+            <div class="section-heading">
+                <div>
+                    <h2>Risk Distribution</h2>
+                    <p>Breakdown of security findings by severity.</p>
+                </div>
+            </div>
+
+            <div id="riskDistribution" class="risk-distribution">
+                <p class="empty-state">
+                    Loading risk distribution...
+                </p>
+            </div>
+
+        </section>
+
+
+        <!-- New Scan Section -->
+        <section class="panel scan-panel" id="new-scan">
+
+            <div class="section-heading">
+                <div>
+                    <h2>Start a New Scan</h2>
+                    <p>
+                        Enter the URL of an application you are
+                        authorized to test.
+                    </p>
+                </div>
+
+                <span class="zap-label">OWASP ZAP</span>
+            </div>
+
+           
+<form id="scanForm">
+
+    <label for="targetUrl">
+        Target Application URL
+    </label>
+
+    <div class="scan-input">
+        <input
+            type="url"
+            id="targetUrl"
+            placeholder="http://localhost:3000"
+            value="http://localhost:3000"
+            required
+        >
+
+        <button type="submit" id="scanButton">
+            Start Scan →
+        </button>
+    </div>
+
+    <label for="scanMode">
+        Select Scan Mode
+    </label>
+
+    <select id="scanMode" required>
+        <option value="quick">
+            Quick Scan - Faster, reduced coverage
+        </option>
+
+        <option value="thorough" selected>
+            Thorough Scan - Broader vulnerability coverage
+        </option>
+    </select>
+
+    <label class="authorization">
+        <input
+            type="checkbox"
+            id="authorized"
+            required
+        >
+
+        I confirm that I own this application or have
+        permission to scan it.
+    </label>
+
+</form>
+
+
+            <div
+                id="scanMessage"
+                class="message"
+                role="status">
+            </div>
+
+            <div id="scanProgress" class="progress-area" hidden>
+
+                <div class="progress-heading">
+                    <strong id="scanStatus">Queued</strong>
+                    <span id="scanId"></span>
+                </div>
+
+                <div class="progress-track">
+                    <div
+                        class="progress-bar"
+                        id="progressBar">
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Vulnerability Findings -->
+        <section class="panel" id="findings">
+
+            <div class="section-heading">
+                <div>
+                    <h2>Vulnerability Findings</h2>
+                    <p>
+                        Security issues identified during scanning.
+                    </p>
+                </div>
+
+                <button
+                    class="secondary-button"
+                    id="refreshButton">
+                    ↻ Refresh
+                </button>
+            </div>
+
+            <div class="table-wrap">
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Vulnerability</th>
+                            <th>Risk</th>
+                            <th>Confidence</th>
+                            <th>URL</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="findingsBody">
+                        <tr>
+                            <td colspan="4" class="empty-state">
+                                No vulnerability findings yet.
+                                Start a scan to see results.
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- Scan History -->
+        <section class="panel" id="history">
+
+            <div class="section-heading">
+                <div>
+                    <h2>Recent Scan History</h2>
+                    <p>Previously initiated security scans.</p>
+                </div>
+            </div>
+
+            <div id="historyList" class="history-list">
+                <p class="empty-state">
+                    No scans available.
+                </p>
+            </div>
+
+        </section>
+
+
+        <!-- Footer -->
+        <footer>
+            SecureScan · Automated Web Application Vulnerability Scanner
+            <span>Powered by Flask &amp; OWASP ZAP</span>
+        </footer>
+
+    </main>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
